@@ -1,18 +1,21 @@
 
 using System;
 using System.IO;
-using System.Text;
+
+using CodeGenerator.CSharp;
+
+using Common;
 
 using DotLiquid;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BlkHost.Pages
+namespace CodeGenerator
 {
-	public class CsGenerator
+	public class JsonSchemaCodeGenerator
 	{
-		public void Generate(string jsonSchema)
+		public async System.Threading.Tasks.Task<string> GenerateAsync(string jsonSchema)
 		{
 
 			// Schema --> Parsed Object --> C# class
@@ -87,7 +90,6 @@ namespace BlkHost.Pages
 						}
 					}
 
-					//Console.WriteLine($"{childName}.{aPropName} [{propTypeName} {isPropNullable}]");
 					aClass.AddNewProp(aPropName, isComplexProp ? propTypeName : CsTypeChecker.CheckType(propTypeName));
 
 					counter++;
@@ -96,15 +98,18 @@ namespace BlkHost.Pages
 
 			Console.WriteLine($"Total props added {counter}");
 
-			Template template = Template.Parse(File.ReadAllText("classCs.liquid"));
-			var updated = template.Render(Hash.FromAnonymousObject(new { csData = classStructure })); // Renders the output => "hi tobi"
-			Console.WriteLine(updated);
-
-			using (FileStream fs = File.Create($"{mainType}.cs"))
+			try
 			{
-				byte[] info = new UTF8Encoding(true).GetBytes(updated);
-				fs.Write(info, 0, info.Length);
+				Template template = Template.Parse(await FileUtils.GetFileContent("CSharp\\Templates\\classCs.liquid"));
+				var updated = template.Render(Hash.FromAnonymousObject(new { csData = classStructure }));
+
+				return updated;
 			}
+			catch (Exception ex)
+			{
+				throw;
+			}
+
 		}
 	}
 }

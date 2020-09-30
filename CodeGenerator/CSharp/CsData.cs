@@ -1,35 +1,11 @@
 using System.Collections.Generic;
+
 using DotLiquid;
 
-namespace BlkHost.Pages
+namespace CodeGenerator.CSharp
 {
-    public class CsTypeChecker
-    {
-        static Dictionary<string, string> TypeMapping = new Dictionary<string, string>() {
-                { "uuid", "Guid"},
-                { "integer", "int"},
-                { "", "object"},
-                { "string", "string"},
-                { "boolean", "bool"}
-            };
 
-        public static string CheckType(string typeToCheck)
-        {
-            return TypeMapping[typeToCheck.Trim()];
-        }
-    }
-
-    public class JsonTypeStrings
-    {
-        public const string Object = "object";
-        public const string Null = "null";
-        public const string Array = "array";
-        public const string Integer = "integer";
-        public const string Boolean = "boolean";
-        public const string String = "string";
-    }
-
-    [LiquidType("classes")]
+	[LiquidType("classes")]
     public class CsData
     {
         public CsData()

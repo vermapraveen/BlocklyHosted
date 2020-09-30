@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
+  public class SelectionMatrix
+  {
+    public SelectionMatrixItem items { get; set; }
+    public object connections { get; set; }
+    public int multiplierQuantity { get; set; }
+    public bool isStaging { get; set; }
+    public object relationshipContext { get; set; }
+    public SellerContext sellerContext { get; set; }
+  }
+
+  public class SelectionMatrixItem
+  {
+    public string id { get; set; }
+    public Guid instanceId { get; set; }
+    public DeltaSelection deltaSelections { get; set; }
+    public ItemItem items { get; set; }
+  }
+
+  public class DeltaSelection
+  {
+    public Action actions { get; set; }
+    public string id { get; set; }
+    public Guid instanceId { get; set; }
+    public string path { get; set; }
+  }
+
+  public class Action
+  {
+    public string type { get; set; }
+    public int value { get; set; }
+  }
+
+  public class ItemItem
+  {
+    public string id { get; set; }
+    public Guid instanceId { get; set; }
+    public DeltaSelection deltaSelections { get; set; }
+    public Options options { get; set; }
+    public string path { get; set; }
+  }
+
+  public class Options
+  {
+    public bool subscriptionUpgrade { get; set; }
+  }
+
+  public class SellerContext
+  {
+    public string region { get; set; }
+    public string country { get; set; }
+    public string language { get; set; }
+    public string currency { get; set; }
+    public string customerSet { get; set; }
+    public string segment { get; set; }
+    public string sourceApplicationName { get; set; }
+    public int companyNumber { get; set; }
+    public int businessUnitId { get; set; }
+  }
+
+}
