@@ -25,9 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlkHost\BlkHost.csproj" />
     <ProjectReference Include="..\CodeGenerator\CodeGenerator.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Host\BlkHost.csproj" />
   </ItemGroup>
 
 </Project>

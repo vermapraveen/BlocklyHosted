@@ -22,7 +22,7 @@ namespace Tests
 
 			var gen = new JsonSchemaCodeGenerator();
 			var generatedContent = await gen.GenerateAsync(jsonSchema);
-			var expectedContent = await FileUtils.GetFileContent("data\\selectionMatrix.txt");
+			var expectedContent = await FileUtils.GetFileContent("data/selectionMatrix.txt");
 			generatedContent.ShouldBe(expectedContent);
 		}
 	}

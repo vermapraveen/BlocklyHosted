@@ -100,7 +100,7 @@ namespace CodeGenerator
 
 			try
 			{
-				Template template = Template.Parse(await FileUtils.GetFileContent("CSharp\\Templates\\classCs.liquid"));
+				Template template = Template.Parse(await FileUtils.GetFileContent("CSharp/Templates/classCs.liquid"));
 				var updated = template.Render(Hash.FromAnonymousObject(new { csData = classStructure }));
 
 				return updated;
