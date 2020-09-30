@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
+{% for aclass in csdata.classes -%}
+  public class {{aclass.name}}
+  {
+{% for aprop in aclass.props -%}
+    public {{aprop.type}} {{aprop.name}} { get; set; }
+{% endfor -%}
+  }
+
+{% endfor -%}
+}

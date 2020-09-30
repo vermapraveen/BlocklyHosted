@@ -1,0 +1,70 @@
+﻿@page
+
+@model IndexModel
+@{
+	ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/3.20200924.0/blockly_compressed.min.js" integrity="sha512-4dMmqcBYffb87r9e0WXCgL6/wAN026w/aQYhXgMR1yMups0JSWm3jgFWEBDO1UCsDuM+M1MRKmf96U3Onk4qDg==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/3.20200924.0/blocks_compressed.min.js" integrity="sha512-6cPR7gw4XO/tr9eRpd2w7SJjBNMtMWa2SQbwhHNPKJb/ZJQR1WsSq+8EEMzt32Qpz46uc3DjHeRUwkAZqRlm3g==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/3.20200924.0/msg/en.min.js" integrity="sha512-CcZSuOhlsHqLLiF3M8hvMc8aWqTE36GEaE/cP7HMNOSZytGihNqhQxFzkXigYQp4psZWCVjEXY2oYFN4+vLAYg==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/3.20200924.0/javascript_compressed.min.js" integrity="sha512-EmvUjPJJkHoyFrSrvifuA/LcKMrtTIP5PV996fl1pWicyhqJeAbnSMzh9pM+VX7L/QZHdTozI9BA2e5g/8hB9Q==" crossorigin="anonymous"></script>
+	<button onclick="runCode()">Run JavaScript</button>
+	<div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+	<xml id="toolbox" style="display: none">
+		<category id="catLogic" colour="210" name="Logic">
+			<block type="text"></block>
+		</category>
+    </xml>
+	<script>
+		var workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox')});
+		Blockly.JavaScript.addReservedWords('code');
+
+		function runCode() {
+			// Generate JavaScript code and run it.
+			window.LoopTrap = 1000;
+			Blockly.JavaScript.INFINITE_LOOP_TRAP =
+				'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+			var code = Blockly.JavaScript.workspaceToCode(workspace);
+			Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+			try {
+				
+				code=code.replace(/\r?\n|\r/g, "");
+				if (code.substring(code.length-1) == ";")
+				{
+					code = code.substring(0, code.length-1);
+				}
+
+				if (code.substring(0, 1) == "'") {
+					code = code.substring(1, code.length);
+				}
+
+				if (code.substring(code.length - 1) == "'") {
+					code = code.substring(0, code.length - 1);
+				}
+				var codeConext = {"Code":code,"Language":"c#"};
+
+				$.ajax({
+					url: '/Index',
+					type : 'POST',
+   					contentType: 'application/json; charset=utf-8',
+					headers: {
+						RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+					},
+					data: JSON.stringify(codeConext)
+				})
+				.done(function () {
+					alert("success");
+				})
+				.fail(function () { 
+					alert("error");
+				});
+			} catch (e) {
+				alert(e);
+			}
+		}
+  
+	</script>
+
+</div>
