@@ -10,6 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Models\Models.csproj" />
 	  <ProjectReference Include="..\CodeGenerator\CodeGenerator.csproj" />
 	</ItemGroup>
 </Project>

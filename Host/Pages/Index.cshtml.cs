@@ -20,10 +20,4 @@ namespace BlkHost.Pages
 
 		}
 	}
-
-	public class CodeContext
-	{
-		public string Code { get; set; }
-		public string Language { get; set; }
-	}
 }

@@ -70,6 +70,13 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+.input-request {
+    max-width: 400px; /* or whatever you want */
+    min-width: 300px; /* this is only if it is empty */
+    width: auto;
+    word-wrap: break-word /* useful if you have really long words that would overflow otherwise*/
+}
+
 .flex-container {
     display: flex;
 }
