@@ -1,10 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using BlkHost.Pages;
 
 using CodeGenerator;
 
 using Common;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using Shouldly;
 
@@ -25,5 +29,86 @@ namespace Tests
 			var expectedContent = await FileUtils.GetFileContent("data/selectionMatrix.txt");
 			generatedContent.ShouldBe(expectedContent);
 		}
+
+		//[Fact]
+		//public async Task GivenValidJsonSchema_WhenOnlyRootLevel_NonComplex_Props_ShouldAbleToCreateCsClassAsync()
+		//{
+		//	const string jsonSchema = "{\"$id\":\"https://example.com/person.schema.json\",\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"Person\",\"type\":\"object\",\"properties\":{\"firstName\":{\"type\":\"string\",\"description\":\"The person's first name.\"},\"lastName\":{\"type\":\"string\",\"description\":\"The person's last name.\"},\"age\":{\"description\":\"Age in years which must be equal to or greater than zero.\",\"type\":\"integer\",\"minimum\":0}}}";
+
+
+		//	var gen = new JsonSchemaCodeGenerator();
+		//	var generatedContent = await gen.GenerateAsync(jsonSchema);
+		//	var expectedContent = await FileUtils.GetFileContent("data/OnlyRootLevel_NonComplex.txt");
+		//	generatedContent.ShouldBe(expectedContent);
+		//}
+
+		[Fact]
+		public async Task GivenRootNode_WhenTypeIsObject_ShouldAbleGetPropertiesOfObject()
+		{
+			const string jsonSchema = "{\"$id\":\"https://example.com/person.schema.json\",\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"Person\",\"type\":\"object\",\"properties\":{\"firstName\":{\"type\":\"string\",\"description\":\"The person's first name.\"},\"lastName\":{\"type\":\"string\",\"description\":\"The person's last name.\"},\"age\":{\"description\":\"Age in years which must be equal to or greater than zero.\",\"type\":\"integer\",\"minimum\":0}}}";
+
+
+		}
+
+		[Fact]
+		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsNotComplex_ShouldAbleGetProperty()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"firstName\":{\"type\":\"string\"}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("firstName");
+			props.First().Type.ShouldBe("string");
+		}
+
+
+		[Fact]
+		public void GivenObjectNodeHasMultipleProperties_WhenPropertyIsSimpleType_ShouldAbleGetProperty()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"age\":{\"type\":\"integer\"}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.Count().ShouldBe(3);			
+		}
+
+		[Fact]
+		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsComplex_ShouldAbleGetProperty()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"sellerContext\":{\"$ref\":\"#/definitions/SellerContext\"}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("sellerContext");
+			props.First().Type.ShouldBe("SellerContext");
+		}
+
+		[Fact]
+		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsNull_ShouldAbleGetPropertyAsEmpty()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"connections\":{\"type\":null}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("connections");
+			props.First().Type.ShouldBe("");
+		}
+
+		[Fact]
+		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsArrayOfSimpleType_ShouldAbleGetPropertyAsEmpty()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"connectionsStrings\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("connectionsStrings");
+			props.First().Type.ShouldBe("string");
+			props.First().IsCollection.ShouldBeTrue();
+		}
 	}
+
 }

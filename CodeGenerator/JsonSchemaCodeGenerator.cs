@@ -1,6 +1,8 @@
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using CodeGenerator.CSharp;
 
@@ -20,13 +22,28 @@ namespace CodeGenerator
 
 			// Schema --> Parsed Object --> C# class
 			var root = (JObject)JsonConvert.DeserializeObject(jsonSchema);
-			var definitionsToken = root["definitions"] as JObject;
-			var mainType = ((string)root["$ref"]).Substring("#/definitions/".Length);
+			var parentNode = root["definitions"] as JObject;
+			var schemaVersion = (string)root["$schema"];
+			var title = (string)root["title"];
+
+			//GetLeafNode(root);
+
+			if (null == parentNode)
+			{
+				parentNode = root["properties"] as JObject;
+			}
+
+			var parentNodeTitle = (string)root["title"];
+			if (null == parentNodeTitle)
+			{
+				parentNodeTitle = ((string)root["$ref"]).Substring("#/definitions/".Length);
+			}
+
 
 			CsData classStructure = new CsData();
 
 			int counter = 0;
-			foreach (var aChild in definitionsToken.Children())
+			foreach (var aChild in parentNode.Children())
 			{
 				string childName = ((JProperty)aChild).Name;
 				var aClass = classStructure.AddNewClass(childName);
@@ -96,8 +113,6 @@ namespace CodeGenerator
 				}
 			}
 
-			Console.WriteLine($"Total props added {counter}");
-
 			try
 			{
 				Template template = Template.Parse(await FileUtils.GetFileContent("CSharp/Templates/classCs.liquid"));
@@ -111,5 +126,63 @@ namespace CodeGenerator
 			}
 
 		}
+
+		public static IEnumerable<PropertyStructure> GetPropertyNode(JObject node)
+		{
+			List<PropertyStructure> props = new List<PropertyStructure>();
+
+			foreach (JProperty propNode in node["properties"].Children())
+			{
+				var propStruct = new PropertyStructure { Name = propNode.Name };
+
+				string prop = null;
+				if (IsTypeNode(propNode))
+				{
+					var aProp = node["properties"][propNode.Name]["type"];
+
+					if(IsArrayNode(prop))
+					{
+						prop = aProp["items"]["$ref"].ToString();
+					}
+					else
+					{
+						prop = aProp.ToString();
+					}
+				}
+				else if (IsComplexNode(propNode))
+				{
+					prop = node["properties"][propNode.Name]["$ref"].ToString().Substring("#/definitions/".Length);
+				}
+
+				propStruct.Type = prop;
+				props.Add(propStruct);
+
+			}
+
+			return props;
+		}
+
+		private static bool IsTypeNode(JProperty node)
+		{
+			return node.Value["type"] != null;
+		}
+
+		private static bool IsArrayNode(JToken aProp)
+		{
+			return aProp.ToString() == JsonTypeStrings.Array;
+		}
+
+		private static bool IsComplexNode(JProperty node)
+		{
+			return node.Value["$ref"] != null;
+		}
+	}
+
+	public struct PropertyStructure
+	{
+		public string Name { get; set; }
+		public string Type { get; set; }
+		public bool IsCollection { get; set; }
+		public bool IsNullable { get; set; }
 	}
 }

@@ -5,13 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\OnlyRootLevel_NonComplex.txt" />
     <None Remove="Data\selectionMatrix.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Data\selectionMatrix.txt">
+    <Content Include="Data\OnlyRootLevel_NonComplex.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
+    </Content>
+    <Content Include="Data\selectionMatrix.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

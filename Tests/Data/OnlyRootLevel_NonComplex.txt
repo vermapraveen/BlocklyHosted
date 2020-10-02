@@ -1,0 +1,9 @@
+namespace BlkHost
+{
+  public class YourClassName
+  {
+    public long? Age { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+  }
+}
