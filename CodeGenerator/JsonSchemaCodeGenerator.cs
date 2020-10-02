@@ -42,7 +42,6 @@ namespace CodeGenerator
 
 			CsData classStructure = new CsData();
 
-			int counter = 0;
 			foreach (var aChild in parentNode.Children())
 			{
 				string childName = ((JProperty)aChild).Name;
@@ -109,7 +108,6 @@ namespace CodeGenerator
 
 					aClass.AddNewProp(aPropName, isComplexProp ? propTypeName : CsTypeChecker.CheckType(propTypeName));
 
-					counter++;
 				}
 			}
 
@@ -213,7 +211,6 @@ namespace CodeGenerator
 		{
 			return node["anyOf"] != null;
 		}
-
 
 		private static bool IsNullTypeNode(JToken node)
 		{

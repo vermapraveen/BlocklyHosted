@@ -177,14 +177,41 @@ namespace Tests
 			props.First().AnyOfProperty.ShouldNotBeNull();
 			props.First().AnyOfProperty.Count().ShouldBe(2);
 			props.First().AnyOfProperty.Any(x =>
-				string.IsNullOrEmpty(x.Type) 
+				string.IsNullOrEmpty(x.Type)
 				&& x.IsNullable
 				&& !x.IsCollection).ShouldBeTrue();
 
-			props.First().AnyOfProperty.Any(x => 
-				x.Type == JsonTypeStrings.Integer 
+			props.First().AnyOfProperty.Any(x =>
+				x.Type == JsonTypeStrings.Integer
 				&& !x.IsNullable
 				&& !x.IsCollection).ShouldBeTrue();
+		}
+
+
+
+		[Fact]
+		public void GivenObjectNodeHasMultipleTypeOfProperties_ShouldAbleToGetAllProps()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"null\"},\"sellerContext\":{\"$ref\":\"#/definitions/SellerContext\"},\"age\":{\"type\":\"integer\"},\"instanceId\":{\"anyOf\":[{\"type\":\"null\"},{\"type\":\"integer\"}]},\"deltaSelections\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/DeltaSelection\"}}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.Count().ShouldBe(6);
+			props.Any(x => x.Name == "firstName" && x.Type == JsonTypeStrings.String && !x.IsNullable && !x.IsCollection).ShouldBeTrue();
+			props.Any(x => x.Name == "lastName" && x.Type == "" && x.IsNullable && !x.IsCollection).ShouldBeTrue();
+			props.Any(x => x.Name == "sellerContext" && x.Type == "SellerContext" && !x.IsNullable && !x.IsCollection).ShouldBeTrue();
+			props.Any(x => x.Name == "age" && x.Type == JsonTypeStrings.Integer && !x.IsNullable && !x.IsCollection).ShouldBeTrue();
+			props.Any(y => y.Name == "instanceId"
+							&& y.AnyOfProperty.Count() == 2
+							&& y.AnyOfProperty.Any(x => string.IsNullOrEmpty(x.Type)
+														&& x.IsNullable
+														&& !x.IsCollection)
+							&& y.AnyOfProperty.Any(x => x.Type == JsonTypeStrings.Integer
+													&& !x.IsNullable
+													&& !x.IsCollection)
+							)
+				.ShouldBeTrue();
+			props.Any(x => x.Name == "deltaSelections" && x.Type == "DeltaSelection" && !x.IsNullable && x.IsCollection).ShouldBeTrue();
 		}
 	}
 
