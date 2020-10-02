@@ -60,6 +60,8 @@ namespace Tests
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("firstName");
 			props.First().Type.ShouldBe("string");
+			props.First().IsNullable.ShouldBeFalse();
+			props.First().IsCollection.ShouldBeFalse();
 		}
 
 
@@ -70,7 +72,9 @@ namespace Tests
 			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
 			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
 
-			props.Count().ShouldBe(3);			
+			props.Count().ShouldBe(3);
+			props.First().IsNullable.ShouldBeFalse();
+			props.First().IsCollection.ShouldBeFalse();
 		}
 
 		[Fact]
@@ -83,6 +87,8 @@ namespace Tests
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("sellerContext");
 			props.First().Type.ShouldBe("SellerContext");
+			props.First().IsNullable.ShouldBeFalse();
+			props.First().IsCollection.ShouldBeFalse();
 		}
 
 		[Fact]
@@ -95,6 +101,23 @@ namespace Tests
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("connections");
 			props.First().Type.ShouldBe("");
+			props.First().IsNullable.ShouldBeTrue();
+			props.First().IsCollection.ShouldBeFalse();
+		}
+
+
+		[Fact]
+		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsNullString_ShouldAbleGetPropertyAsEmpty()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"connections\":{\"type\":\"null\"}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("connections");
+			props.First().Type.ShouldBe("");
+			props.First().IsNullable.ShouldBeTrue();
+			props.First().IsCollection.ShouldBeFalse();
 		}
 
 		[Fact]
@@ -107,20 +130,50 @@ namespace Tests
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("connectionsStrings");
 			props.First().Type.ShouldBe("string");
+			props.First().IsNullable.ShouldBeFalse();
 			props.First().IsCollection.ShouldBeTrue();
 		}
 
 		[Fact]
 		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsArrayOfComplexType_ShouldAbleGetPropertyAsEmpty()
 		{
-			const string aPropJsonSchema = "{\"properties\":{\"Selections\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Selectiontem\"}}}}";
+			const string aPropJsonSchema = "{\"properties\":{\"Selections\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/SelectionItem\"}}}}";
 			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
 			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
 
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("Selections");
-			props.First().Type.ShouldBe("Selectiontem");
+			props.First().Type.ShouldBe("SelectionItem");
+			props.First().IsNullable.ShouldBeFalse();
 			props.First().IsCollection.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void GivenObjectNodeHasSingleStringTypeProperty_WhenPropertyHasFormatNodeValueUuid_ShouldSetPropertyTypeAsUuid()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"instanceId\":{\"type\":\"string\",\"format\":\"uuid\"}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("instanceId");
+			props.First().Type.ShouldBe("uuid");
+			props.First().IsNullable.ShouldBeFalse();
+			props.First().IsCollection.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void GivenObjectNodeHasPropertyWithAnyOf_WhenPropertyHasNullTypeAndInteger_ShouldSetPropertyTypeAsUuid()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"instanceId\":{\"anyOf\":[{\"type\":\"null\"},{\"type\":\"integer\"}]}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("instanceId");
+			props.First().Type.ShouldBe("integer");
+			props.First().IsNullable.ShouldBeTrue();
+			props.First().IsCollection.ShouldBeFalse();
 		}
 	}
 
