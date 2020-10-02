@@ -171,9 +171,20 @@ namespace Tests
 
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("instanceId");
-			props.First().Type.ShouldBe("integer");
-			props.First().IsNullable.ShouldBeTrue();
+			props.First().Type.ShouldBe(null);
+			props.First().IsNullable.ShouldBeFalse();
 			props.First().IsCollection.ShouldBeFalse();
+			props.First().AnyOfProperty.ShouldNotBeNull();
+			props.First().AnyOfProperty.Count().ShouldBe(2);
+			props.First().AnyOfProperty.Any(x =>
+				string.IsNullOrEmpty(x.Type) 
+				&& x.IsNullable
+				&& !x.IsCollection).ShouldBeTrue();
+
+			props.First().AnyOfProperty.Any(x => 
+				x.Type == JsonTypeStrings.Integer 
+				&& !x.IsNullable
+				&& !x.IsCollection).ShouldBeTrue();
 		}
 	}
 

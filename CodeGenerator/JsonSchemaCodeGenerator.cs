@@ -145,62 +145,63 @@ namespace CodeGenerator
 
 		private static PropertyStructure FindNonLeafLevelPropType(JToken aProp)
 		{
-			PropertyStructure propStruct = new PropertyStructure();
-
-			string prop;
+			PropertyStructure propStruct;
 
 			if (IsArrayNode(aProp))
 			{
-				propStruct.IsCollection = true;
 				aProp = aProp["items"];
-
-				prop = FindLeafLevelPropType(aProp);
+				propStruct = FindLeafLevelPropType(aProp);
+				propStruct.IsCollection = true;
 			}
 			else if (IsAnyOfNode(aProp))
 			{
+				propStruct = FindLeafLevelPropType(aProp);
 				List<PropertyStructure> subProps = new List<PropertyStructure>();
 				foreach (var aChildOfAnyType in aProp["anyOf"])
 				{
-					PropertyStructure subPropStruct = new PropertyStructure();
 					var subProp = FindLeafLevelPropType(aChildOfAnyType);
-
-					subProps.Add(subPropStruct);
+					subProps.Add(subProp);
 				}
-			}
-			else if (IsNullTypeNode(aProp))
-			{
-				prop = "";
-				propStruct.IsNullable = true;
+
+				propStruct.AnyOfProperty = subProps;
 			}
 			else
 			{
-				prop = FindLeafLevelPropType(aProp);
+				propStruct = FindLeafLevelPropType(aProp);
 			}
 
-			propStruct.Type = prop;
 			return propStruct;
 		}
 
-		private static string FindLeafLevelPropType(JToken propToken)
+		private static PropertyStructure FindLeafLevelPropType(JToken propToken)
 		{
-			string prop = null;
-			if (IsTypeNode(propToken))
+			PropertyStructure propStruct = new PropertyStructure();
+
+			if (IsNullTypeNode(propToken))
+			{
+				propStruct = new PropertyStructure
+				{
+					IsNullable = true,
+					Type = ""
+				};
+			}
+			else if (IsTypeNode(propToken))
 			{
 				if (IsStringTypeNodeHasFormatNode(propToken))
 				{
-					prop = propToken["format"].ToString();
+					propStruct.Type = propToken["format"].ToString();
 				}
 				else
 				{
-					prop = propToken["type"].ToString();
+					propStruct.Type = propToken["type"].ToString();
 				}
 			}
 			else if (IsComplexNode(propToken))
 			{
-				prop = propToken["$ref"].ToString().Substring("#/definitions/".Length);
+				propStruct.Type = propToken["$ref"].ToString().Substring("#/definitions/".Length);
 			}
 
-			return prop;
+			return propStruct;
 		}
 
 		private static bool IsTypeNode(JToken node)
