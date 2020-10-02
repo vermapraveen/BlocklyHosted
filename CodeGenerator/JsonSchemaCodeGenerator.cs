@@ -131,30 +131,12 @@ namespace CodeGenerator
 		{
 			List<PropertyStructure> props = new List<PropertyStructure>();
 
-			foreach (JProperty propNode in node["properties"].Children())
+			foreach (JProperty propNode in node["properties"])
 			{
-				var propStruct = new PropertyStructure { Name = propNode.Name };
+				var aProp = node["properties"][propNode.Name];
 
-				string prop = null;
-				if (IsTypeNode(propNode))
-				{
-					var aProp = node["properties"][propNode.Name]["type"];
-
-					if(IsArrayNode(prop))
-					{
-						prop = aProp["items"]["$ref"].ToString();
-					}
-					else
-					{
-						prop = aProp.ToString();
-					}
-				}
-				else if (IsComplexNode(propNode))
-				{
-					prop = node["properties"][propNode.Name]["$ref"].ToString().Substring("#/definitions/".Length);
-				}
-
-				propStruct.Type = prop;
+				var propStruct = FindNonLeafLevelPropType(propNode, aProp);
+				propStruct.Name = propNode.Name;
 				props.Add(propStruct);
 
 			}
@@ -162,19 +144,63 @@ namespace CodeGenerator
 			return props;
 		}
 
-		private static bool IsTypeNode(JProperty node)
+		private static PropertyStructure FindNonLeafLevelPropType(JProperty propNode, JToken aProp)
 		{
-			return node.Value["type"] != null;
+			var propStruct = new PropertyStructure();
+
+			string prop = null;
+			if (IsTypeNode(propNode.First()))
+			{
+
+				if (IsArrayNode(aProp))
+				{
+					propStruct.IsCollection = true;
+
+					var arrType = aProp["items"];
+					prop = FindLeafLevelPropType(arrType);
+				}
+				else
+				{
+					prop = aProp["type"].ToString();
+				}
+			}
+			else if (IsComplexNode(propNode.First()))
+			{
+				prop = aProp["$ref"].ToString().Substring("#/definitions/".Length);
+			}
+
+			propStruct.Type = prop;
+			return propStruct;
+		}
+
+		private static string FindLeafLevelPropType(JToken propToken)
+		{
+			string prop = null;
+			if (IsTypeNode(propToken))
+			{
+				prop = propToken["type"].ToString();
+			}
+			else if (IsComplexNode(propToken))
+			{
+				prop = propToken["$ref"].ToString().Substring("#/definitions/".Length);
+			}
+
+			return prop;
+		}
+
+		private static bool IsTypeNode(JToken node)
+		{
+			return node["type"] != null;
 		}
 
 		private static bool IsArrayNode(JToken aProp)
 		{
-			return aProp.ToString() == JsonTypeStrings.Array;
+			return aProp["type"].ToString() == JsonTypeStrings.Array;
 		}
 
-		private static bool IsComplexNode(JProperty node)
+		private static bool IsComplexNode(JToken node)
 		{
-			return node.Value["$ref"] != null;
+			return node["$ref"] != null;
 		}
 	}
 

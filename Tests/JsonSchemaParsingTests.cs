@@ -51,7 +51,7 @@ namespace Tests
 		}
 
 		[Fact]
-		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsNotComplex_ShouldAbleGetProperty()
+		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsSimpleType_ShouldAbleGetProperty()
 		{
 			const string aPropJsonSchema = "{\"properties\":{\"firstName\":{\"type\":\"string\"}}}";
 			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
@@ -107,6 +107,19 @@ namespace Tests
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("connectionsStrings");
 			props.First().Type.ShouldBe("string");
+			props.First().IsCollection.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void GivenObjectNodeHasSingleProperty_WhenPropertyIsArrayOfComplexType_ShouldAbleGetPropertyAsEmpty()
+		{
+			const string aPropJsonSchema = "{\"properties\":{\"Selections\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Selectiontem\"}}}}";
+			var aPropObject = (JObject)JsonConvert.DeserializeObject(aPropJsonSchema);
+			var props = JsonSchemaCodeGenerator.GetPropertyNode(aPropObject);
+
+			props.ShouldHaveSingleItem();
+			props.First().Name.ShouldBe("Selections");
+			props.First().Type.ShouldBe("Selectiontem");
 			props.First().IsCollection.ShouldBeTrue();
 		}
 	}
