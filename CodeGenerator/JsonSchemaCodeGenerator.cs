@@ -23,22 +23,11 @@ namespace CodeGenerator
 			// Schema --> Parsed Object --> C# class
 			var root = (JObject)JsonConvert.DeserializeObject(jsonSchema);
 			var parentNode = root["definitions"] as JObject;
-			var schemaVersion = (string)root["$schema"];
-			var title = (string)root["title"];
-
-			//GetLeafNode(root);
 
 			if (null == parentNode)
 			{
 				parentNode = root["properties"] as JObject;
 			}
-
-			var parentNodeTitle = (string)root["title"];
-			if (null == parentNodeTitle)
-			{
-				parentNodeTitle = ((string)root["$ref"]).Substring("#/definitions/".Length);
-			}
-
 
 			CsData classStructure = new CsData();
 
@@ -46,68 +35,13 @@ namespace CodeGenerator
 			{
 				string childName = ((JProperty)aChild).Name;
 				var aClass = classStructure.AddNewClass(childName);
-				foreach (var aProp in root["definitions"][childName]["properties"].Children())
+				var node = root["definitions"][childName];
+
+				var propStructCollection = GetPropertyNode(node);
+
+				foreach (var propStruct in propStructCollection)
 				{
-					string aPropName = ((JProperty)aProp).Name;
-					string isPropNullable = "";
-					string propTypeName = "";
-					bool isComplexProp = false;
-
-					var prop = (JObject)root["definitions"][childName]["properties"][aPropName];
-
-					if (prop.ContainsKey("anyOf"))
-					{
-						foreach (var aChildOfAnyType in (prop["anyOf"] as JArray).Children())
-						{
-							var aType = aChildOfAnyType["type"];
-							if (aType.ToString() == JsonTypeStrings.Null)
-							{
-								isPropNullable = "Nullable";
-							}
-							else if (aType.ToString() == JsonTypeStrings.Array)
-							{
-								var arrayType = prop["anyOf"]["items"]["$ref"];
-								propTypeName = $"{((string)arrayType).Substring("#/definitions/".Length)}";
-								isComplexProp = true;
-							}
-
-							else
-							{
-								var format = aChildOfAnyType["format"];
-								propTypeName = string.IsNullOrEmpty((string)format) ? (string)aType : $"{format}";
-							}
-						}
-					}
-
-					else if (prop.ContainsKey("$ref"))
-					{
-						var refType = root["definitions"][childName]["properties"][aPropName]["$ref"];
-						propTypeName = $"{((string)refType).Substring("#/definitions/".Length)}";
-						isComplexProp = true;
-					}
-					else if (prop.ContainsKey("type"))
-					{
-						var type = root["definitions"][childName]["properties"][aPropName]["type"];
-
-						if (type.ToString() == JsonTypeStrings.Null)
-						{
-							isPropNullable = "Nullable";
-						}
-						else if (type.ToString() == JsonTypeStrings.Array)
-						{
-							var arrayType = root["definitions"][childName]["properties"][aPropName]["items"]["$ref"];
-							propTypeName = $"{((string)arrayType).Substring("#/definitions/".Length)}";
-							isComplexProp = true;
-						}
-						else
-						{
-							var format = root["definitions"][childName]["properties"][aPropName]["format"];
-							propTypeName = string.IsNullOrEmpty((string)format) ? (string)type : $"{format}";
-						}
-					}
-
-					aClass.AddNewProp(aPropName, isComplexProp ? propTypeName : CsTypeChecker.CheckType(propTypeName));
-
+					aClass.AddNewProp(propStruct.Name, CsTypeChecker.CheckType(propStruct.Type));
 				}
 			}
 
@@ -125,15 +59,13 @@ namespace CodeGenerator
 
 		}
 
-		public static IEnumerable<PropertyStructure> GetPropertyNode(JObject node)
+		public static IEnumerable<PropertyStructure> GetPropertyNode(JToken node)
 		{
 			List<PropertyStructure> props = new List<PropertyStructure>();
 
 			foreach (JProperty propNode in node["properties"])
 			{
-				var aProp = node["properties"][propNode.Name];
-
-				var propStruct = FindNonLeafLevelPropType(aProp);
+				var propStruct = FindNonLeafLevelPropType(node["properties"][propNode.Name]);
 				propStruct.Name = propNode.Name;
 				props.Add(propStruct);
 			}
@@ -161,7 +93,8 @@ namespace CodeGenerator
 					subProps.Add(subProp);
 				}
 
-				propStruct.AnyOfProperty = subProps;
+				propStruct.IsNullable = subProps.Any(x => x.IsNullable);
+				propStruct.Type = subProps.First(x => !string.IsNullOrEmpty(x.Type)).Type;
 			}
 			else
 			{
@@ -240,6 +173,5 @@ namespace CodeGenerator
 		public string Type { get; set; }
 		public bool IsCollection { get; set; }
 		public bool IsNullable { get; set; }
-		public IEnumerable<PropertyStructure> AnyOfProperty { get; set; }
 	}
 }

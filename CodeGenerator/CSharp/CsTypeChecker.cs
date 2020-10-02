@@ -14,7 +14,13 @@ namespace CodeGenerator.CSharp
 
         public static string CheckType(string typeToCheck)
         {
-            return TypeMapping[typeToCheck.Trim()];
+            var key = typeToCheck.Trim();
+            if (TypeMapping.ContainsKey(key))
+			{
+                return TypeMapping[key];
+            }
+
+            return typeToCheck;
         }
     }
 }

@@ -171,20 +171,9 @@ namespace Tests
 
 			props.ShouldHaveSingleItem();
 			props.First().Name.ShouldBe("instanceId");
-			props.First().Type.ShouldBe(null);
-			props.First().IsNullable.ShouldBeFalse();
+			props.First().Type.ShouldBe(JsonTypeStrings.Integer);
+			props.First().IsNullable.ShouldBeTrue();
 			props.First().IsCollection.ShouldBeFalse();
-			props.First().AnyOfProperty.ShouldNotBeNull();
-			props.First().AnyOfProperty.Count().ShouldBe(2);
-			props.First().AnyOfProperty.Any(x =>
-				string.IsNullOrEmpty(x.Type)
-				&& x.IsNullable
-				&& !x.IsCollection).ShouldBeTrue();
-
-			props.First().AnyOfProperty.Any(x =>
-				x.Type == JsonTypeStrings.Integer
-				&& !x.IsNullable
-				&& !x.IsCollection).ShouldBeTrue();
 		}
 
 
@@ -201,16 +190,7 @@ namespace Tests
 			props.Any(x => x.Name == "lastName" && x.Type == "" && x.IsNullable && !x.IsCollection).ShouldBeTrue();
 			props.Any(x => x.Name == "sellerContext" && x.Type == "SellerContext" && !x.IsNullable && !x.IsCollection).ShouldBeTrue();
 			props.Any(x => x.Name == "age" && x.Type == JsonTypeStrings.Integer && !x.IsNullable && !x.IsCollection).ShouldBeTrue();
-			props.Any(y => y.Name == "instanceId"
-							&& y.AnyOfProperty.Count() == 2
-							&& y.AnyOfProperty.Any(x => string.IsNullOrEmpty(x.Type)
-														&& x.IsNullable
-														&& !x.IsCollection)
-							&& y.AnyOfProperty.Any(x => x.Type == JsonTypeStrings.Integer
-													&& !x.IsNullable
-													&& !x.IsCollection)
-							)
-				.ShouldBeTrue();
+			props.Any(x => x.Name == "instanceId" && x.Type == JsonTypeStrings.Integer && x.IsNullable && !x.IsCollection).ShouldBeTrue();
 			props.Any(x => x.Name == "deltaSelections" && x.Type == "DeltaSelection" && !x.IsNullable && x.IsCollection).ShouldBeTrue();
 		}
 	}
