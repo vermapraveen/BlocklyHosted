@@ -1,17 +1,11 @@
-
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-using CodeGenerator.CSharp;
-
-using Common;
-
-using DotLiquid;
+using ModelGenerator.CSharp;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ModelGenerator;
 
 namespace CodeGenerator
 {
@@ -45,18 +39,12 @@ namespace CodeGenerator
 				}
 			}
 
-			try
-			{
-				Template template = Template.Parse(await FileUtils.GetFileContent("CSharp/Templates/classCs.liquid"));
-				var updated = template.Render(Hash.FromAnonymousObject(new { csData = classStructure }));
+			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
 
-				return updated;
-			}
-			catch (Exception ex)
-			{
-				throw;
-			}
+			//Template template = Template.Parse(await FileUtils.GetFileContent("CSharp/Templates/classCs.liquid"));
+			//var updated = template.Render(Hash.FromAnonymousObject(new { csData = classStructure }));
 
+			return await modelGenerator.GenerateModelContentAsync(classStructure);
 		}
 
 		public static IEnumerable<PropertyStructure> GetPropertyNode(JToken node)

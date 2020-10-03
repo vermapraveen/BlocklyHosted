@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlkHost", "BlkHost\BlkHost.csproj", "{8CB250A8-BC81-4239-B5A8-C058F690B07B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbGeneration", "DbGeneration\DbGeneration.csproj", "{FEBBD3EF-6F3B-4021-8379-D5E7A54AFA93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelGenerator", "ModelGenerator\ModelGenerator.csproj", "{89C3CA34-61C8-441B-87E6-2F83FEAC7063}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{8CB250A8-BC81-4239-B5A8-C058F690B07B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CB250A8-BC81-4239-B5A8-C058F690B07B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CB250A8-BC81-4239-B5A8-C058F690B07B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEBBD3EF-6F3B-4021-8379-D5E7A54AFA93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEBBD3EF-6F3B-4021-8379-D5E7A54AFA93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEBBD3EF-6F3B-4021-8379-D5E7A54AFA93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEBBD3EF-6F3B-4021-8379-D5E7A54AFA93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89C3CA34-61C8-441B-87E6-2F83FEAC7063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89C3CA34-61C8-441B-87E6-2F83FEAC7063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89C3CA34-61C8-441B-87E6-2F83FEAC7063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89C3CA34-61C8-441B-87E6-2F83FEAC7063}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

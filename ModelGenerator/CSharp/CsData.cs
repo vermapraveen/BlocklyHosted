@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using DotLiquid;
 
-namespace CodeGenerator.CSharp
+namespace ModelGenerator.CSharp
 {
 
 	[LiquidType("classes")]

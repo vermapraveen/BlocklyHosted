@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CodeGenerator.CSharp
+namespace ModelGenerator.CSharp
 {
 	public class CsTypeChecker
     {
