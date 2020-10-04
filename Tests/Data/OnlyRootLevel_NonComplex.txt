@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-  public class SelectionMatrix
-  {
-    public string firstName { get; set; }
-    public string lastName { get; set; }
-    public int age { get; set; }
-  }
-
+	public class SelectionMatrix
+	{
+		public string firstName { get; set; }
+		public string lastName { get; set; }
+		public int age { get; set; }
+	}
 }

@@ -8,5 +8,6 @@ namespace ModelGenerator
 	public interface IModelGenerator
 	{
 		Task<string> GenerateModelContentAsync(CsData modelData);
+		Task<string> GenerateDbModelContentAsync(CsData modelData);
 	}
 }
