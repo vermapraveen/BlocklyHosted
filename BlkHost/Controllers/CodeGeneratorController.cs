@@ -17,8 +17,7 @@ namespace BlkHost.Controllers
 		[HttpPost]
 		public string Post([FromBody] CodeContext codeConext)
 		{
-			var gen = new JsonSchemaCodeGenerator();
-			return gen.GenerateAsync(codeConext.Code).Result;
+			return JsonSchemaCodeGenerator.GenerateAsync(codeConext.Code).Result;
 		}
 	}
 }

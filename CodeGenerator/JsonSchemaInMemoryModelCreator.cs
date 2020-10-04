@@ -18,9 +18,8 @@ namespace CodeGenerator
 		public CsData GetJsonModel(string jsonSchema)
 		{
 			var root = (JObject)JsonConvert.DeserializeObject(jsonSchema);
-			var parentNode = root["definitions"] as JObject;
 
-			if (null == parentNode)
+			if (root["definitions"] is not JObject parentNode)
 			{
 				parentNode = root["properties"] as JObject;
 			}
@@ -114,7 +113,7 @@ namespace CodeGenerator
 			}
 			else if (IsComplexNode(propToken))
 			{
-				propStruct.Type = propToken["$ref"].ToString().Substring("#/definitions/".Length);
+				propStruct.Type = propToken["$ref"].ToString()["#/definitions/".Length..];
 			}
 
 			return propStruct;

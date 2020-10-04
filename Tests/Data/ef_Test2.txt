@@ -10,15 +10,11 @@ namespace ConsoleApp1
 {
 	public class User1DbContext_pg : DbContext
 	{
-{% for aclass in csdata.classes -%}
-		public DbSet<{{aclass.name}}> {{aclass.name}} { get; set; }
-{% endfor -%}
+		public DbSet<SelectionMatrix> SelectionMatrix { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-{% for aclass in csdata.classes -%}
-			modelBuilder.Entity<{{aclass.name}}>();
-{% endfor -%}
+			modelBuilder.Entity<SelectionMatrix>();
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -26,13 +22,12 @@ namespace ConsoleApp1
 			optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=user1;Username=postgres;Password=postgres");
 		}
 	}
-{% for aclass in csdata.classes -%}
 
-	public class {{aclass.name}}
+	public class SelectionMatrix
 	{
-{% for aprop in aclass.props -%}
-		public {{aprop.type}} {{aprop.name}} { get; set; }
-{% endfor -%}
+		public long Id { get; set; }
+		public string firstName { get; set; }
+		public string lastName { get; set; }
+		public int age { get; set; }
 	}
-{% endfor -%}
 }

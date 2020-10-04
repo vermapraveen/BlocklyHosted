@@ -12,22 +12,19 @@ namespace CodeGenerator
 {
 	public class JsonSchemaCodeGenerator
 	{
-		public async System.Threading.Tasks.Task<string> GenerateAsync(string jsonSchema)
+		public static async System.Threading.Tasks.Task<string> GenerateAsync(string jsonSchema)
 		{
 			// Schema --> Parsed Object --> C# class
 			IJsonSchemaInMemoryModelCreator jsonSchemaInMemoryModelCreator = new JsonSchemaInMemoryModelCreator();
 			CsData classStructure = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
 
 			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
+			var classCode = await modelGenerator.GenerateModelContentAsync(classStructure);
 
-			//Template template = Template.Parse(await FileUtils.GetFileContent("CSharp/Templates/classCs.liquid"));
-			//var updated = template.Render(Hash.FromAnonymousObject(new { csData = classStructure }));
+			IEfModelContentGenerator dbModelGenerator = new EfModelContentGenerator();
+			_ = await dbModelGenerator.GenerateDbModelContentAsync(classStructure);
 
-			//var classCode = await modelGenerator.GenerateModelContentAsync(classStructure);
-
-			var dbModelCode = await modelGenerator.GenerateDbModelContentAsync(classStructure);
-
-			return dbModelCode;
+			return classCode;
 		}
 
 

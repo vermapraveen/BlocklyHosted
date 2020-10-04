@@ -1,0 +1,100 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+
+namespace ConsoleApp1
+{
+	public class User1DbContext_pg : DbContext
+	{
+		public DbSet<SelectionMatrix> BaseMatrix { get; set; }
+		public DbSet<SelectionMatrixItem> BaseMatrixItem { get; set; }
+		public DbSet<DeltaSelection> ChangeSelection { get; set; }
+		public DbSet<Action> Action { get; set; }
+		public DbSet<ItemItem> ItemItem { get; set; }
+		public DbSet<Options> Options { get; set; }
+		public DbSet<SellerContext> TransactionContext { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<SelectionMatrix>();
+			modelBuilder.Entity<SelectionMatrixItem>();
+			modelBuilder.Entity<DeltaSelection>();
+			modelBuilder.Entity<Action>();
+			modelBuilder.Entity<ItemItem>();
+			modelBuilder.Entity<Options>();
+			modelBuilder.Entity<SellerContext>();
+		}
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=user1;Username=postgres;Password=postgres");
+		}
+	}
+
+	public class SelectionMatrix
+	{
+		public long Id { get; set; } //Extra
+		public SelectionMatrixItem items { get; set; }
+		public string connections { get; set; } //updated from "object"
+		public int multiplierQuantity { get; set; }
+		public bool isStaging { get; set; }
+		public string relationshipContext { get; set; } // updated from "object"
+		public SellerContext sellerContext { get; set; }
+
+	}
+	public class SelectionMatrixItem
+	{
+		public string id { get; set; }
+		public Guid instanceId { get; set; }
+		public DeltaSelection deltaSelections { get; set; }
+		public ItemItem items { get; set; }
+
+	}
+	public class DeltaSelection
+	{
+		public Action actions { get; set; }
+		public string id { get; set; }
+		public Guid instanceId { get; set; }
+		public string path { get; set; }
+
+	}
+	public class Action
+	{
+		public long Id { get; set; } //Extra
+		public string type { get; set; }
+		public int value { get; set; }
+
+	}
+	public class ItemItem
+	{
+		public string id { get; set; }
+		public Guid instanceId { get; set; }
+		public DeltaSelection deltaSelections { get; set; }
+		public Options options { get; set; }
+		public string path { get; set; }
+
+	}
+	public class Options
+	{
+		public long Id { get; set; } //Extra
+		public bool subscriptionUpgrade { get; set; }
+
+	}
+	public class SellerContext
+	{
+		public long Id { get; set; } //Extra
+		public string region { get; set; }
+		public string country { get; set; }
+		public string language { get; set; }
+		public string currency { get; set; }
+		public string customerSet { get; set; }
+		public string segment { get; set; }
+		public string sourceApplicationName { get; set; }
+		public int companyNumber { get; set; }
+		public int businessUnitId { get; set; }
+	}
+}

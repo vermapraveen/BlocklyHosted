@@ -23,9 +23,10 @@ namespace Tests
 			IJsonSchemaInMemoryModelCreator jsonSchemaInMemoryModelCreator = new JsonSchemaInMemoryModelCreator();
 			var classStructure = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
 
-			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
+			var modelGenerator = new EfModelContentGenerator();
 			var generatedContent = await modelGenerator.GenerateDbModelContentAsync(classStructure);
-			var expectedContent = await FileUtils.GetFileContent("data/selectionMatrix.txt");
+			//await FileUtils.CreateFileForContent("data/test.txt", generatedContent);
+			var expectedContent = await FileUtils.GetFileContent("data/ef_selectionMatrix.txt");
 			generatedContent.ShouldBe(expectedContent);
 		}
 
@@ -38,9 +39,10 @@ namespace Tests
 			IJsonSchemaInMemoryModelCreator jsonSchemaInMemoryModelCreator = new JsonSchemaInMemoryModelCreator();
 			var classStructure = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
 
-			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
+			var modelGenerator = new EfModelContentGenerator();
 			var generatedContent = await modelGenerator.GenerateDbModelContentAsync(classStructure);
-			var expectedContent = await FileUtils.GetFileContent("data/OnlyRootLevel_NonComplex.txt");
+			//await FileUtils.CreateFileForContent("data/test.txt", generatedContent);
+			var expectedContent = await FileUtils.GetFileContent("data/ef_Test2.txt");
 			generatedContent.ShouldBe(expectedContent);
 		}
 	}

@@ -40,7 +40,7 @@ namespace Tests
 
 			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
 			var generatedContent = await modelGenerator.GenerateModelContentAsync(classStructure);
-			var expectedContent = await FileUtils.GetFileContent("data/OnlyRootLevel_NonComplex.txt");
+			var expectedContent = await FileUtils.GetFileContent("data/test2.txt");
 			generatedContent.ShouldBe(expectedContent);
 		}
 

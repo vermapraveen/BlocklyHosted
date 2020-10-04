@@ -4,7 +4,7 @@ namespace ModelGenerator.CSharp
 {
 	public class CsTypeChecker
     {
-        static Dictionary<string, string> TypeMapping = new Dictionary<string, string>() {
+        static readonly Dictionary<string, string> TypeMapping = new Dictionary<string, string>() {
                 { "uuid", "Guid"},
                 { "integer", "int"},
                 { "", "object"},

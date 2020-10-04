@@ -5,12 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\OnlyRootLevel_NonComplex.txt" />
+    <None Remove="Data\ef_selectionMatrix.txt" />
+    <None Remove="Data\ef_Test2.txt" />
     <None Remove="Data\selectionMatrix.txt" />
+    <None Remove="Data\test2.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\OnlyRootLevel_NonComplex.txt">
+    <Content Include="Data\ef_Test2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\test2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\ef_selectionMatrix.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\selectionMatrix.txt">
@@ -29,9 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlkHost\BlkHost.csproj" />
     <ProjectReference Include="..\CodeGenerator\CodeGenerator.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\DbGeneration\DbGeneration.csproj" />
+    <ProjectReference Include="..\ModelGenerator\ModelGenerator.csproj" />
   </ItemGroup>
 
 </Project>
