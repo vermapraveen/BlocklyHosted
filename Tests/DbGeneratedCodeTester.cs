@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using DbGeneration;
 
@@ -14,34 +10,33 @@ namespace Tests
 {
 	public class DbGeneratedCodeTester
 	{
-		private const string connStr = "";
+		private const string connStr = "Host=localhost;Port=5433;Database=user1;Username=postgres;Password=postgres";
+
 
 		[Fact]
-		public async Task ShouldAbleToCreateData()
+		public async Task ShouldAbleToPerformCRUDOps()
 		{
+			var updateFirstNameTo = "master";
 			DataAccessLayer dal = new DataAccessLayer(connStr);
+			await dal.DeleteAll();
+
+			var count = await dal.GetCount();
+			count.ShouldBe(0);
+
 			await dal.Add();
-		}
+			count = await dal.GetCount();
+			count.ShouldBe(1);
 
-
-		[Fact]
-		public async Task ShouldAbleToReadData()
-		{
-			DataAccessLayer dal = new DataAccessLayer(connStr);
 			var frstName = await dal.Get();
-			frstName.ShouldBe("John1");
-		}
 
+			await dal.UpdateFirstName(frstName, updateFirstNameTo);
 
-		[Fact]
-		public async Task ShouldAbleToUpdateData()
-		{
-		}
+			var updatedName = await dal.Get();
+			updatedName.ShouldBe(updateFirstNameTo);
+			await dal.DeleteAll();
 
-
-		[Fact]
-		public async Task ShouldAbleToDeleteData()
-		{
+			count = await dal.GetCount();
+			count.ShouldBe(0);
 		}
 	}
 }

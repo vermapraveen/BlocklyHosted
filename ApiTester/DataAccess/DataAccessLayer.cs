@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Npgsql;
 
-namespace DbGeneration
+namespace ApiTester
 {
 	public class DataAccessLayer
 	{
