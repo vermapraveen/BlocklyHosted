@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 
+using ApiTester.Models;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiTester.Controllers
@@ -11,17 +13,17 @@ namespace ApiTester.Controllers
 		private const string connStr = "Host=localhost;Port=5433;Database=user1;Username=postgres;Password=postgres";
 
 		[HttpGet]
-		public async Task<string> GetAsync()
+		public async Task<SelectionMatrix> GetAsync()
 		{
 
 			DataAccessLayer dal = new DataAccessLayer(connStr);
-			return await dal.Get();
+			var firstName = await dal.Get();
+			return new SelectionMatrix { firstName = firstName };
 		}
 
 		[HttpPost]
-		public async Task PostAsync()
+		public async Task PostAsync(SelectionMatrix selectionMatrix)
 		{
-
 			DataAccessLayer dal = new DataAccessLayer(connStr);
 			await dal.Add();
 		}

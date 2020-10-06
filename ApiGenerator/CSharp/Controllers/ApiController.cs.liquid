@@ -1,0 +1,31 @@
+﻿using System.Threading.Tasks;
+
+using {{csdata.namespace}}.Models;
+
+using Microsoft.AspNetCore.Mvc;
+
+namespace {{csdata.namespace}}.Controllers
+{
+	[ApiController]
+	[Route("[controller]")]
+	public class {{csdata.api.endpoint.Name}}Controller : ControllerBase
+	{
+		private const string connStr = "{{csdata.db.connstring}}";
+
+		[HttpGet]
+		public async Task<{{csdata.api.endpoint.model}}> GetAsync()
+		{
+
+			DataAccessLayer dal = new DataAccessLayer(connStr);
+			var firstName = await dal.Get();
+			return new {{csdata.api.endpoint.model}} { firstName = firstName };
+		}
+
+		[HttpPost]
+		public async Task PostAsync({{csdata.api.endpoint.model}} selectionMatrix)
+		{
+			DataAccessLayer dal = new DataAccessLayer(connStr);
+			await dal.Add();
+		}
+	}
+}

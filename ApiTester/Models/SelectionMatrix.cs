@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace ApiTester
+namespace ApiTester.Models
 {
 
 	public class SelectionMatrix
