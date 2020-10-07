@@ -5,9 +5,14 @@ using DotLiquid;
 namespace ModelGenerator.CSharp
 {
 
-	[LiquidType("classes")]
+	[LiquidType("classes", "namespace", "db", "api", "appname")]
 	public class CsData
 	{
+		public string @namespace { get; set; }
+		public string appname { get; set; }
+		public Db db { get; set; }
+		public Api api { get; set; }
+
 		public CsData()
 		{
 			classes = new List<CsClass>();
@@ -65,6 +70,25 @@ namespace ModelGenerator.CSharp
 				public string type { get; private set; }
 				public string name { get; private set; }
 			}
+		}
+
+		[LiquidType("api")]
+		public class Api
+		{
+			public Endpoint endpoint { get; set; }
+			[LiquidType("name", "model")]
+			public class Endpoint
+			{
+				public string name { get; set; }
+				public string model { get; set; }
+			}
+
+		}
+		
+		[LiquidType("connstring")]
+		public class Db
+		{
+			public string connstring { get; set; }
 		}
 	}
 }
