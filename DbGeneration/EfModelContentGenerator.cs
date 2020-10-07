@@ -48,10 +48,7 @@ namespace ModelGenerator.CSharp
 
 		public static async Task<string> GenerateModelContentAsync(CsData modelData)
 		{
-			Template template = Template.Parse(await FileUtils.GetFileContent("PostgreSql/Templates/efContext.liquid"));
-			var updated = template.Render(Hash.FromAnonymousObject(new { csData = modelData }));
-
-			return updated;
+			return await TransfomTextUtils.GenerateModelContentAsync(modelData, "PostgreSql/Templates/efContext.liquid");
 		}
 	}
 }
