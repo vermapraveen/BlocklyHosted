@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\ModelGenerator\ModelGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,10 +18,10 @@
     <None Update="CSharp\appsettings.json.liquid">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="CSharp\Controllers\ApiController.cs.liquid">
+    <None Update="CSharp\ApiController.cs.liquid">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="CSharp\DataAccess\DataAccessLayer.cs.liquid">
+    <None Update="CSharp\DataAccessLayer.cs.liquid">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="CSharp\Dockerfile.liquid">

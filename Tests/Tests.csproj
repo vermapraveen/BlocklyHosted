@@ -37,11 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiGenerator\ApiGenerator.csproj" />
     <ProjectReference Include="..\CodeGenerator\CodeGenerator.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\DbGeneration\DbGeneration.csproj" />
-    <ProjectReference Include="..\ModelGenerator\ModelGenerator.csproj" />
   </ItemGroup>
 
 </Project>

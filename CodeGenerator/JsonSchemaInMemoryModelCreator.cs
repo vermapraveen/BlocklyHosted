@@ -26,6 +26,11 @@ namespace CodeGenerator
 
 			CsData classStructure = new CsData();
 
+			if (root["$ref"] is not null)
+			{
+				classStructure.api.endpoint.model = classStructure.api.endpoint.name = root["$ref"].ToString()["#/definitions/".Length..];
+			}
+
 			foreach (var classLevelObject in parentNode.Children())
 			{
 				string classLevelObjectName = ((JProperty)classLevelObject).Name;

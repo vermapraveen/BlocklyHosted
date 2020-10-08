@@ -1,12 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 
 using ModelGenerator.CSharp;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ModelGenerator;
-using Common;
+using ApiGenerator;
 
 namespace CodeGenerator
 {
@@ -16,13 +11,26 @@ namespace CodeGenerator
 		{
 			// Schema --> Parsed Object --> C# class
 			IJsonSchemaInMemoryModelCreator jsonSchemaInMemoryModelCreator = new JsonSchemaInMemoryModelCreator();
-			CsData classStructure = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
+			CsData jsonModel = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
 
-			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
-			var classCode = await modelGenerator.GenerateModelContentAsync(classStructure);
+
+			jsonModel.appname = "StockApp";
+			jsonModel.@namespace = $"{jsonModel.appname}Ns";
+
+			jsonModel.db = new CsData.Db
+			{
+				connstring = "this is mt conn string"
+			};
 
 			IEfModelContentGenerator dbModelGenerator = new EfModelContentGenerator();
-			_ = await dbModelGenerator.GenerateDbModelContentAsync(classStructure);
+			var updatedModel = dbModelGenerator.GetModelDataWithDbProps(jsonModel);
+
+			var api = new ApiProjectGenerator<CsData>(updatedModel);
+			await api.GenerateProjectFor("CSharp");
+
+			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
+			var classCode = await modelGenerator.GenerateModelContentAsync(jsonModel);
+
 
 			return classCode;
 		}

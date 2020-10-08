@@ -9,9 +9,10 @@ namespace ModelGenerator.CSharp
 {
 	public interface IEfModelContentGenerator
 	{
-
 		Task<string> GenerateDbModelContentAsync(CsData modelData);
+		CsData GetModelDataWithDbProps(CsData modelData);
 	}
+
 	public class EfModelContentGenerator : IEfModelContentGenerator
 	{
 		public EfModelContentGenerator()
@@ -20,30 +21,32 @@ namespace ModelGenerator.CSharp
 
 		public Task<string> GenerateDbModelContentAsync(CsData modelData)
 		{
-			CsData dbData = new CsData();
+			CsData dbData = GetModelDataWithDbProps(modelData);
 
-			modelData.classes.ToList().ForEach(c =>
+			return GenerateModelContentAsync(dbData);
+		}
+
+		public CsData GetModelDataWithDbProps(CsData modelData)
+		{
+			var clonedModelData = CopyUtils.GerDeepCloneOf(modelData);
+			clonedModelData.classes.ToList().ForEach(c =>
 			{
-				var aClass = dbData.AddNewClass(c.name);
-
 				for (int i = 0; i < c.props.Count; i++)
 				{
 					if (c.props[i].type.Equals("object", System.StringComparison.InvariantCultureIgnoreCase))
 					{
-						aClass.AddNewProp(c.props[i].name, "string");
+						c.props[i].type = "string";
 						continue;
 					}
-
-					aClass.AddNewProp(c.props[i].name, c.props[i].type);
 				}
 
 				if (!c.props.Any(p => p.name.Equals("id", System.StringComparison.InvariantCultureIgnoreCase)))
 				{
-					aClass.AddIdProp();
+					c.AddIdProp();
 				}
 			});
 
-			return GenerateModelContentAsync(dbData);
+			return clonedModelData;
 		}
 
 		public static async Task<string> GenerateModelContentAsync(CsData modelData)

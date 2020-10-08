@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 using DotLiquid;
 
@@ -12,9 +13,12 @@ namespace ModelGenerator.CSharp
 		public string appname { get; set; }
 		public Db db { get; set; }
 		public Api api { get; set; }
+		public List<CsClass> classes { get; set; }
 
 		public CsData()
 		{
+			db = new Db();
+			api = new Api();
 			classes = new List<CsClass>();
 		}
 
@@ -25,9 +29,6 @@ namespace ModelGenerator.CSharp
 
 			return aClass;
 		}
-
-		public List<CsClass> classes { get; set; }
-
 
 		[LiquidType("name", "props")]
 		public class CsClass
@@ -67,22 +68,27 @@ namespace ModelGenerator.CSharp
 					this.name = name;
 					this.type = type;
 				}
-				public string type { get; private set; }
-				public string name { get; private set; }
+				public string type { get; set; }
+				public string name { get; set; }
 			}
 		}
 
-		[LiquidType("api")]
+		[LiquidType("endpoint")]
 		public class Api
-		{
+		{			
 			public Endpoint endpoint { get; set; }
+
+			public Api()
+			{
+				endpoint = new Endpoint();
+			}
+
 			[LiquidType("name", "model")]
 			public class Endpoint
 			{
 				public string name { get; set; }
 				public string model { get; set; }
 			}
-
 		}
 		
 		[LiquidType("connstring")]
