@@ -14,7 +14,7 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <None Update="CSharp\Templates\classCs.liquid">
+    <None Update="Templates\CSharp\classCs.liquid">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

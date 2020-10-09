@@ -1,20 +1,19 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
-COPY ["{{csdata.appname}}/{{csdata.appname}}.csproj", "{{csdata.appname}}/"]
-RUN dotnet restore "{{csdata.appname}}/{{csdata.appname}}.csproj"
+COPY ["Api.csproj", ""]
+RUN dotnet restore "./Api.csproj"
 COPY . .
-WORKDIR "/src/{{csdata.appname}}"
-RUN dotnet build "{{csdata.appname}}.csproj" -c Release -o /app/build
+WORKDIR "/src/."
+RUN dotnet build "Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "{{csdata.appname}}.csproj" -c Release -o /app/publish
+RUN dotnet publish "Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "{{csdata.appname}}.dll"]
+ENTRYPOINT ["dotnet", "Api.dll"]

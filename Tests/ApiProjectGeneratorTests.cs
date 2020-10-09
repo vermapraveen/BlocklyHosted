@@ -4,6 +4,8 @@ using ApiGenerator;
 
 using ModelGenerator.CSharp;
 
+using Models;
+
 using Xunit;
 
 namespace Tests

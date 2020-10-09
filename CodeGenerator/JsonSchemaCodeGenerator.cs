@@ -2,6 +2,7 @@
 using ModelGenerator.CSharp;
 using ModelGenerator;
 using ApiGenerator;
+using Models;
 
 namespace CodeGenerator
 {
@@ -11,25 +12,25 @@ namespace CodeGenerator
 		{
 			// Schema --> Parsed Object --> C# class
 			IJsonSchemaInMemoryModelCreator jsonSchemaInMemoryModelCreator = new JsonSchemaInMemoryModelCreator();
-			CsData jsonModel = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
+			CsData inputSchemaModel = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
 
 
-			jsonModel.appname = "StockApp";
-			jsonModel.@namespace = $"{jsonModel.appname}Ns";
+			inputSchemaModel.appname = "StockApp";
+			inputSchemaModel.@namespace = $"{inputSchemaModel.appname}Ns";
 
-			jsonModel.db = new CsData.Db
+			inputSchemaModel.db = new CsData.Db
 			{
 				connstring = "this is mt conn string"
 			};
 
 			IEfModelContentGenerator dbModelGenerator = new EfModelContentGenerator();
-			var updatedModel = dbModelGenerator.GetModelDataWithDbProps(jsonModel);
+			var updatedModel = dbModelGenerator.GetSchemaInputModelDataWithDbProps(inputSchemaModel);
 
 			var api = new ApiProjectGenerator<CsData>(updatedModel);
 			await api.GenerateProjectFor("CSharp");
 
 			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
-			var classCode = await modelGenerator.GenerateModelContentAsync(jsonModel);
+			var classCode = await modelGenerator.GenerateModelContentAsync(inputSchemaModel);
 
 
 			return classCode;

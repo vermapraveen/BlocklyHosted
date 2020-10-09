@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-using {{csdata.namespace}}.Models;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace {{csdata.namespace}}.Controllers
@@ -18,7 +16,7 @@ namespace {{csdata.namespace}}.Controllers
 
 			DataAccessLayer dal = new DataAccessLayer(connStr);
 			var firstName = await dal.Get();
-			return new {{csdata.api.endpoint.model}} { firstName = firstName };
+			return new {{csdata.api.endpoint.model}}();
 		}
 
 		[HttpPost]

@@ -2,6 +2,8 @@
 
 using ModelGenerator.CSharp;
 
+using Models;
+
 namespace ModelGenerator
 {
 	public interface IModelGenerator

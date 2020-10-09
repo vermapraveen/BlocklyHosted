@@ -1,0 +1,4 @@
+﻿docker rm $(docker stop $(docker ps -a -q --filter ancestor=test1 --format="{{.ID}}"))
+docker image rm test1
+docker build -t test1 .
+docker run -p 8001:80 test1

@@ -22,6 +22,7 @@ namespace Tests
 
 			IJsonSchemaInMemoryModelCreator jsonSchemaInMemoryModelCreator = new JsonSchemaInMemoryModelCreator();
 			var classStructure = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
+			classStructure.@namespace = "ConsoleApp1";
 
 			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
 			var generatedContent = await modelGenerator.GenerateModelContentAsync(classStructure);
@@ -37,6 +38,7 @@ namespace Tests
 
 			IJsonSchemaInMemoryModelCreator jsonSchemaInMemoryModelCreator = new JsonSchemaInMemoryModelCreator();
 			var classStructure = jsonSchemaInMemoryModelCreator.GetJsonModel(jsonSchema);
+			classStructure.@namespace = "ConsoleApp1";
 
 			IModelGenerator modelGenerator = new CSharpFileContentGenerator();
 			var generatedContent = await modelGenerator.GenerateModelContentAsync(classStructure);

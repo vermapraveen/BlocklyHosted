@@ -30,6 +30,9 @@
     <None Update="CSharp\Program.cs.liquid">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="CSharp\script.sh.liquid">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="CSharp\Startup.cs.liquid">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

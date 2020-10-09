@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 using DotLiquid;
 
-namespace ModelGenerator.CSharp
+namespace Models
 {
 
 	[LiquidType("classes", "namespace", "db", "api", "appname")]

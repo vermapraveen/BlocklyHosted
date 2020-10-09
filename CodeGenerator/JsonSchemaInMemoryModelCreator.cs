@@ -5,6 +5,7 @@ using ModelGenerator.CSharp;
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Models;
 
 namespace CodeGenerator
 {

@@ -6,6 +6,8 @@ using Common;
 using ModelGenerator;
 using ModelGenerator.CSharp;
 
+using Models;
+
 namespace ApiGenerator
 {
 	public class ApiProjectGenerator<T> where T : CsData

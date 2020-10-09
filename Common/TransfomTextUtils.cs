@@ -8,10 +8,19 @@ namespace Common
 	{
 		public static async Task<string> GenerateModelContentAsync<TData>(TData modelData, string filePath)
 		{
-			Template template = Template.Parse(await FileUtils.GetFileContent(filePath));
-			var updated = template.Render(Hash.FromAnonymousObject(new { csData = modelData }));
+			try
+			{
 
-			return updated;
+				Template template = Template.Parse(await FileUtils.GetFileContent(filePath));
+				var updated = template.Render(Hash.FromAnonymousObject(new { csData = modelData }));
+
+				return updated;
+			}
+			catch (System.Exception ex)
+			{
+
+				throw;
+			}
 		}
 	}
 }

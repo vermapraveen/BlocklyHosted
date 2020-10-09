@@ -5,12 +5,14 @@ using Common;
 
 using DotLiquid;
 
+using Models;
+
 namespace ModelGenerator.CSharp
 {
 	public interface IEfModelContentGenerator
 	{
 		Task<string> GenerateDbModelContentAsync(CsData modelData);
-		CsData GetModelDataWithDbProps(CsData modelData);
+		CsData GetSchemaInputModelDataWithDbProps(CsData modelData);
 	}
 
 	public class EfModelContentGenerator : IEfModelContentGenerator
@@ -21,12 +23,12 @@ namespace ModelGenerator.CSharp
 
 		public Task<string> GenerateDbModelContentAsync(CsData modelData)
 		{
-			CsData dbData = GetModelDataWithDbProps(modelData);
+			CsData dbData = GetSchemaInputModelDataWithDbProps(modelData);
 
 			return GenerateModelContentAsync(dbData);
 		}
 
-		public CsData GetModelDataWithDbProps(CsData modelData)
+		public CsData GetSchemaInputModelDataWithDbProps(CsData modelData)
 		{
 			var clonedModelData = CopyUtils.GerDeepCloneOf(modelData);
 			clonedModelData.classes.ToList().ForEach(c =>
