@@ -14,27 +14,17 @@ spec:
       labels:
         k8s-app: fastapi
     spec:
-      # volumes:
-        # - name: fastapi-certs
-          # secret:
-            # secretName: fastapi-certs
-            # defaultMode: 420
-        # - name: tmp-volume
-          # emptyDir: {}
       containers:
-        - name: fastapi
-          image: 'pkvcr.azurecr.io/fastapi:dev'
-          ports:
-            - containerPort: 80
-          resources:
-            limits:
-              cpu: 500m
-              memory: 128Mi
-            requests:
-              cpu: 250m
-              memory: 64Mi
-          # volumeMounts:
-            # - name: fastapi-certs
-              # mountPath: /certs
-            # - name: tmp-volume
-              # mountPath: /tmp
+      - name: fastapi
+        image: 'pkvcr.azurecr.io/blkhost/fastapi'
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 250m
+            memory: 64Mi
+      imagePullSecrets:
+      - name: pkvcrsec

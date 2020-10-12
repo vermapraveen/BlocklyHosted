@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="..\.dockerignore" Link="Deployment\.dockerignore" />
+  </ItemGroup>
+
 </Project>

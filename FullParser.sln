@@ -21,11 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGenerator", "ApiGenerato
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{E8187EDA-1D57-4C92-A3AB-48C884D82616}"
 	ProjectSection(SolutionItems) = preProject
-		nginx-config-map.yaml = nginx-config-map.yaml
 		setup.sh = setup.sh
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastApi", "FastApi\FastApi.csproj", "{57E576AE-86CD-4568-8709-88B7340A256A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastApi", "FastApi\FastApi.csproj", "{57E576AE-86CD-4568-8709-88B7340A256A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
