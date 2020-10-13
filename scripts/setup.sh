@@ -27,10 +27,9 @@ kubectl config set-context pkvcluster --namespace=blkhost-ns
 helm repo add nginx-stable https://helm.nginx.com/stable
 helm repo update
 
-helm install blkhost-ingctr-release nginx-stable/nginx-ingress --set controller.service.loadBalancerIP="104.42.21.28" --set controller.replicaCount=1 --set rbac.create=true
+helm install blkhost-ingctr-release nginx-stable/nginx-ingress --set controller.replicaCount=1 --set rbac.create=true 
+#--set controller.service.loadBalancerIP="104.42.21.28" 
 
 helm uninstall blkhost-ingctr-release
 
 helm delete --purge blkhost-ingctr-release
-
-helm install blkhost-ingctr-release nginx-stable/nginx-ingress --namespace blkhost-ns --set controller.replicaCount=1 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux --set controller.service.loadBalancerIP="104.42.21.28" --set controller.publishService.enabled=true --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"="main"

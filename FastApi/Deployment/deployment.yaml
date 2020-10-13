@@ -1,30 +1,84 @@
-﻿kind: Deployment
-apiVersion: apps/v1
+﻿apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: fastapi
   labels:
-    k8s-app: fastapi
+    app: opd-fastapi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: fastapi
+      service: fastapi
   template:
     metadata:
       labels:
-        k8s-app: fastapi
+        app: opd-fastapi
+        service: fastapi
     spec:
       containers:
-      - name: fastapi
-        image: 'pkvcr.azurecr.io/blkhost/fastapi'
-        ports:
-        - containerPort: 80
-        resources:
-          limits:
-            cpu: 250m
-            memory: 128Mi
-          requests:
-            cpu: 250m
-            memory: 64Mi
+        - name: fastapi
+          image: 'pkvcr.azurecr.io/blkhost/fastapi'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+          resources:
+            limits:
+              cpu: 250m
+              memory: 128Mi
+            requests:
+              cpu: 250m
+              memory: 64Mi
       imagePullSecrets:
       - name: pkvcrsec
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi
+  labels:
+    app: opd-fastapi
+    service: fastapi
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: fastapi
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fastapi-ingress
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: 1persondev.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fastapi
+            port:
+              number: 80
+  - host: www.1persondev.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fastapi
+            port:
+              number: 80
